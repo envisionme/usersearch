@@ -1,0 +1,5 @@
+; $Id$
+name = User Search
+description = Search for users by real name or system user name.
+package = NoJoShmo
+core = 6.x

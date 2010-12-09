@@ -1,0 +1,19 @@
+.usersearch-field .form-text.as-input {
+  background: transparent;
+}
+
+.usersearch-field .as-results .as-result-item {
+  position: relative;
+  text-align: right;
+  height: 42px;
+}
+
+.usersearch-field .as-results .as-result-item img {
+  left:4px;
+  position:absolute;
+}
+
+.usersearch-field .as-results .as-result-item .as-name {
+  padding-left:40px;
+  padding-right:5px;
+}
