@@ -1,10 +1,6 @@
 <?php
 // $Id$
 
-//==========================================//
-// SEARCH BLOCK
-//==========================================//
-
 /**
 * Implementation of hook_block().
 */
@@ -27,10 +23,45 @@ function usersearch_block($op = 'list', $delta = '', $edit = array()) {
 }
 
 /**
+* Implementation of hook_menu
+**/
+function usersearch_menu() {
+  $items = array();
+  $items['usersearch/autosuggest'] = array(
+    'page callback' => 'usersearch_autosuggest',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK
+  );
+  $items['usersearch/search'] = array(
+		'title' => 'Search Results',
+    'page callback' => '_user_search_results',
+    'access callback' => '_profilewizard_access',
+    'file' => 'usersearch_search.inc',
+  );
+  return $items;
+}
+
+/**
+ * Function to calculate access to menu
+ *
+ * @return boolean
+ *  True if valid
+ */
+function _usersearch_access() {
+  /*global $user;
+  $node = node_load($nid);
+  return $user && $user->uid &&
+  (
+    // The user is not blocked and logged in at least once.
+    ($user->access && $user->status && ((user_access('use profile wizard') && $node->uid == $user->uid) || user_access('administer profile wizard')))
+  );/**/
+	return TRUE;
+}
+
+/**
 * Implementation of hook_form
 **/
 function usersearch_form($form_state) {
-
   $path = drupal_get_path('module', 'usersearch');
   drupal_add_js($path.'/autoSuggest/jquery.autoSuggest.js', 'module');
   drupal_add_js($path.'/autosuggest-custom.js', 'module');
@@ -52,95 +83,11 @@ function usersearch_form($form_state) {
 }
 
 /**
-* Implementation of hook_menu
-**/
-function usersearch_menu() {
-  $items = array();
-  $items['usersearch/autosuggest'] = array(
-    'page callback' => 'usersearch_autosuggest',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK
-  );
-  $items['usersearch/search'] = array(
-    'page callback' => 'full_search',
-    'access callback' => TRUE,
-    'type' => MENU_NORMAL_ITEM,
-  );
-  return $items;
-}
-
-/**
-* Callback function for the search results page
-**/
-//~ function _user_search_results($testarg) {
-
-  function full_search() {
-  
-  $output = '';
-  $output = t('<div class="user-search">');
-  $user_results;
-  $company_results;
-  $search_input = check_plain(arg(2));
-  
-  $result = db_query('SELECT uid FROM {users} WHERE UPPER(name) LIKE "%%%s%"', strtoupper($search_input));
-
-  while ($row = db_fetch_object($result)) {
-    $user_tmp = user_load($row->uid);
-    if (!(in_array($row->uid, $user_results)) && in_array('company', array_values($user_tmp->roles)))
-      $company_results[] = $row->uid;
-    else {
-      if (!(in_array($row->uid, $user_results)) && in_array('applicant', array_values($user_tmp->roles)))
-        $user_results[] = $row->uid;
-    }
-  }
-  
-  $result = db_query('SELECT node.uid as uid 
-                      FROM {node} node
-                      INNER JOIN {content_type_uprofile} uprofile ON node.nid = uprofile.nid
-                      WHERE UPPER(uprofile.field_name_value) LIKE "%%%s%"', strtoupper($search_input));
-                      
-  while ($row = db_fetch_object($result)) {
-    $user_tmp = user_load($row->uid);
-    if (!(in_array($row->uid, $user_results)) && in_array('applicant', array_values($user_tmp->roles)))
-      $user_results[] = $row->uid;
-  }
-  
-  /** ----- PRINT THE COMPANY AVATARS ------*/
-  
-  $output .= t('<h3>Companies</h3>');
-  
-  if (empty($company_results))
-    $output .= t('No companies found to match your search criteria.');
-  
-  foreach ($company_results as $user_result) {
-  
-    $user_tmp = user_load($user_result);
-    
-    //Build the node to output
-    $user_profile = get_user_profile($user_tmp->uid);
-    
-    $output .= node_view($user_profile, $teaser = true);
-  
-  } // foreach
-  
-  
-  /** ----- PRINT THE USER AVATARS ------*/
-  
-  $output .= t('<h3>Users</h3>');
-  
-  if (empty($user_results))
-    $output .= t('No users found to match your search criteria.');
-  
-  foreach ($user_results as $user_result) {
-  
-    $user_tmp = user_load($user_result);
-    
-    $user_profile = get_user_profile($user_tmp->uid);
-    
-    $output .= node_view($user_profile, $teaser = true);
-  
-  }
-  return $output;
+ * Form submition handler
+ */
+function usersearch_form_submit($form, &$form_state) {
+  $search_string = $form['search_string']['#value'];
+  $form_state['redirect'] = 'usersearch/search/'.trim($search_string);
 }
 
 function usersearch_autosuggest() {
@@ -153,11 +100,6 @@ function usersearch_autosuggest() {
   header("Content-type: application/json");
   echo json_encode($list);
   exit();
-}
-
-function usersearch_form_submit($form, &$form_state) {
-  $search_string = $form['search_string']['#value'];
-  $form_state['redirect'] = 'usersearch/search/'.trim($search_string);
 }
 
 function _usersearch_get_contacts($arg) {
