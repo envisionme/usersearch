@@ -10,14 +10,11 @@
 /**
 * Callback function for the search results page
 **/
-function _user_search_results() {
-
-  // function full_search() {
+function _user_search_results($str) {
   $output = '';
-  $output = t('<div class="user-search">');
   $user_results;
   $company_results;
-  $search_input = check_plain(arg(2));
+  $search_input = check_plain($str);
   
   $result = db_query('SELECT uid FROM {users} WHERE UPPER(name) LIKE "%%%s%"', strtoupper($search_input));
 
@@ -42,40 +39,32 @@ function _user_search_results() {
       $user_results[] = $row->uid;
   }
   
-  /** ----- PRINT THE COMPANY AVATARS ------*/
+  // print company data
+	if (!empty($company_results)) {
+		$output .= t('<h3>Companies</h3>');
+		foreach ($company_results as $user_result) {
+			$user_tmp = user_load($user_result);
+			//Build the node to output
+			$user_profile = get_user_profile($user_tmp->uid);
+			$output .= node_view($user_profile, $teaser = true);
+		}
+	}
+
+	// print applicant data
+  if (!empty($user_results)) {
+		if (!empty($company_results))
+			$output .= t('<h3>Users</h3>');
+		foreach ($user_results as $user_result) {
+			$user_tmp = user_load($user_result);
+			$user_profile = get_user_profile($user_tmp->uid);
+			$output .= node_view($user_profile, $teaser = true);
+		}
+	}
+	
+	if (empty($user_results) && empty($company_results))
+		$output .= 'No users or companies match your search criteria.';
+	
+	$output = t('<div class="user-search">').$output.'</div>';
   
-  $output .= t('<h3>Companies</h3>');
-  
-  if (empty($company_results))
-    $output .= t('No companies found to match your search criteria.');
-  
-  foreach ($company_results as $user_result) {
-  
-    $user_tmp = user_load($user_result);
-    
-    //Build the node to output
-    $user_profile = get_user_profile($user_tmp->uid);
-    
-    $output .= node_view($user_profile, $teaser = true);
-  
-  } // foreach
-  
-  
-  /** ----- PRINT THE USER AVATARS ------*/
-  
-  $output .= t('<h3>Users</h3>');
-  
-  if (empty($user_results))
-    $output .= t('No users found to match your search criteria.');
-  
-  foreach ($user_results as $user_result) {
-  
-    $user_tmp = user_load($user_result);
-    
-    $user_profile = get_user_profile($user_tmp->uid);
-    
-    $output .= node_view($user_profile, $teaser = true);
-  
-  }
   return $output;
 }

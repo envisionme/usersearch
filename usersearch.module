@@ -32,9 +32,10 @@ function usersearch_menu() {
     'access callback' => '_profilewizard_access',
     'file' => 'usersearch_ajax.inc',
   );
-  $items['usersearch/search'] = array(
+  $items['usersearch/search/%'] = array(
 		'title' => 'Search Results',
     'page callback' => '_user_search_results',
+    'page arguments' => array(2),
     'access callback' => '_profilewizard_access',
     'file' => 'usersearch_search.inc',
   );
