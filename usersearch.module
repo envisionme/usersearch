@@ -57,10 +57,11 @@ function usersearch_menu() {
  *  True if valid
  */
 function _usersearch_access() {
+	global $user;
   return $user && $user->uid &&
   (
     // The user is not blocked and logged in at least once.
-    ($user->access && $user->status && ((user_access('use user search') && $node->uid == $user->uid)))
+    ($user->access && $user->status && user_access('use user search'))
   );
 	return TRUE;
 }
@@ -96,4 +97,3 @@ function usersearch_form_submit($form, &$form_state) {
   $search_string = $form['search_string']['#value'];
   $form_state['redirect'] = 'usersearch/search/'.trim($search_string);
 }
-
