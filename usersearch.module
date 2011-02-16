@@ -23,20 +23,28 @@ function usersearch_block($op = 'list', $delta = '', $edit = array()) {
 }
 
 /**
+ * Implementation of hook_perm()
+ */
+function usersearch_perm() {
+  return array('use user search');
+}
+
+
+/**
 * Implementation of hook_menu
 **/
 function usersearch_menu() {
   $items = array();
   $items['usersearch/autosuggest.json'] = array(
     'page callback' => 'usersearch_autosuggest',
-    'access callback' => '_profilewizard_access',
+    'access callback' => '_usersearch_access',
     'file' => 'usersearch_ajax.inc',
   );
   $items['usersearch/search/%'] = array(
 		'title' => 'Search Results',
     'page callback' => '_user_search_results',
     'page arguments' => array(2),
-    'access callback' => '_profilewizard_access',
+    'access callback' => '_usersearch_access',
     'file' => 'usersearch_search.inc',
   );
   return $items;
@@ -49,13 +57,11 @@ function usersearch_menu() {
  *  True if valid
  */
 function _usersearch_access() {
-  /*global $user;
-  $node = node_load($nid);
   return $user && $user->uid &&
   (
     // The user is not blocked and logged in at least once.
     ($user->access && $user->status && ((user_access('use profile wizard') && $node->uid == $user->uid) || user_access('administer profile wizard')))
-  );/**/
+  );
 	return TRUE;
 }
 
