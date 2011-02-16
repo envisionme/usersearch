@@ -60,7 +60,7 @@ function _usersearch_access() {
   return $user && $user->uid &&
   (
     // The user is not blocked and logged in at least once.
-    ($user->access && $user->status && ((user_access('use profile wizard') && $node->uid == $user->uid) || user_access('administer profile wizard')))
+    ($user->access && $user->status && ((user_access('use user search') && $node->uid == $user->uid)))
   );
 	return TRUE;
 }
