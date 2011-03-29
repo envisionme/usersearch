@@ -12,8 +12,8 @@
 **/
 function _user_search_results($str) {
   $output = '';
-  $user_results;
-  $company_results;
+  $user_results = array();
+  $company_results = array();
   $search_input = check_plain($str);
   
   $result = db_query('SELECT uid FROM {users} WHERE UPPER(name) LIKE "%%%s%"', strtoupper($search_input));

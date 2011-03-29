@@ -1,6 +1,6 @@
 if (Drupal.jsEnabled) {
   $(document).ready(function() {
-    $("#edit-search-string").autoSuggest("/usersearch/autosuggest", {
+    $("#edit-search-string").autoSuggest("/usersearch/autosuggest.json", {
           minChars: 2,
           selectedItemProp: "name",
           searchObjProps: "name",
