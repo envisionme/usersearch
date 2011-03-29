@@ -28,10 +28,7 @@ function _user_search_results($str) {
     }
   }
   
-  $result = db_query('SELECT node.uid as uid 
-                      FROM {node} node
-                      INNER JOIN {content_type_uprofile} uprofile ON node.nid = uprofile.nid
-                      WHERE UPPER(uprofile.field_name_value) LIKE "%%%s%"', strtoupper($search_input));
+  $result = db_query('SELECT uid FROM  {realname} WHERE UPPER(realname) LIKE  "%%%s%"', strtoupper($search_input));
                       
   while ($row = db_fetch_object($result)) {
     $user_tmp = user_load($row->uid);
@@ -62,7 +59,7 @@ function _user_search_results($str) {
 	}
 	
 	if (empty($user_results) && empty($company_results))
-		$output .= 'No users or companies match your search criteria.';
+		$output .= 'No user names match your search criteria.';
 	
 	$output = t('<div class="user-search">').$output.'</div>';
   
