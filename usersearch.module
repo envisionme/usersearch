@@ -81,7 +81,7 @@ function usersearch_form($form_state) {
     '#title' => t('Profile Search'), 
     '#size' => 30, 
     '#maxlength' => 64, 
-    '#description' => t('Enter name or Company'),
+    '#description' => t('Enter a contact\'s name'),
     '#prefix' => '<div class="usersearch-field">',
     '#suffix' => '</div>',
   );
