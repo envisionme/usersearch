@@ -14,8 +14,10 @@ function usersearch_block($op = 'list', $delta = '', $edit = array()) {
     case 'view':
       switch ($delta) {
         case 'usersearch-block':
+					global $user;
           $block['subject'] = t('User Search');
-          $block['content'] = drupal_get_form('usersearch_form');
+					if ($user->uid > 0)
+						$block['content'] = drupal_get_form('usersearch_form');
           break;
       }
       return $block;
@@ -87,6 +89,24 @@ function usersearch_form($form_state) {
   );
   
   $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+  return $form;
+}
+
+/**
+ *  Mini search form
+ */
+function usersearch_mini_form($form_state) {
+  $form['search_string'] = array(
+    '#type' => 'textfield',
+    '#title' => '',
+  );
+  
+  $form['buttons']['submit'] = array(
+    '#type' => 'image_button',
+    '#src' => drupal_get_path('theme', 'njs_01') . '/icons/konigi/magnifying-glass-2.png',
+    '#submit' => array('usersearch_form_submit'),
+    '#weight' => -1,
+  );
   return $form;
 }
 
