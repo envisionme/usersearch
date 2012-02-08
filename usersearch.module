@@ -60,12 +60,7 @@ function usersearch_menu() {
  */
 function _usersearch_access() {
 	global $user;
-  return $user && $user->uid &&
-  (
-    // The user is not blocked and logged in at least once.
-    ($user->access && $user->status && user_access('use user search'))
-  );
-	return TRUE;
+  return user_access('use user search');
 }
 
 /**
