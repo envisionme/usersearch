@@ -28,7 +28,7 @@ function usersearch_block($op = 'list', $delta = '', $edit = array()) {
  * Implementation of hook_perm()
  */
 function usersearch_perm() {
-  return array('use user search');
+  return array('use usersearch', 'use usersearch autocomplete');
 }
 
 
@@ -68,9 +68,11 @@ function _usersearch_access() {
 **/
 function usersearch_form($form_state) {
   $path = drupal_get_path('module', 'usersearch');
-  drupal_add_js($path.'/autoSuggest/jquery.autoSuggest.js', 'module');
-  drupal_add_js($path.'/autosuggest-custom.js', 'module');
-  drupal_add_css($path.'/autoSuggest/autoSuggest.css', 'module');
+  if (user_access('use usersearch autocomplete')) {
+    drupal_add_js($path.'/autoSuggest/jquery.autoSuggest.js', 'module');
+    drupal_add_js($path.'/autosuggest-custom.js', 'module');
+    drupal_add_css($path.'/autoSuggest/autoSuggest.css', 'module');
+  }
   drupal_add_css($path.'/usersearch.css', 'module');
 
   $form['search_string'] = array(
