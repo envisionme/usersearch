@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 /**
 * Implementation of hook_block().
 */
@@ -42,7 +40,7 @@ function usersearch_menu() {
     'access callback' => '_usersearch_access',
     'file' => 'usersearch_ajax.inc',
   );
-  $items['usersearch/search/%'] = array(
+  $items['usersearch/search'] = array(
 		'title' => 'Search Results',
     'page callback' => '_user_search_results',
     'page arguments' => array(2),
@@ -59,7 +57,6 @@ function usersearch_menu() {
  *  True if valid
  */
 function _usersearch_access() {
-	global $user;
   return user_access('use user search');
 }
 
@@ -85,7 +82,11 @@ function usersearch_form($form_state) {
     '#suffix' => '</div>',
   );
   
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+  $form['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Search'),
+    '#submit' => array('usersearch_form_submit'),
+  );
   return $form;
 }
 

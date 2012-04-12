@@ -11,7 +11,14 @@
 * Callback function for the search results page
 **/
 function _user_search_results($str) {
-  $output = '';
+  $output = drupal_get_form('usersearch_mini_form');
+  
+  // Check if the string isn't empty and return warning.
+  if (empty($str)) {
+    $output .= t('No search string was specified. Please do so to use the search.');
+    return $output;
+  }
+  
   $user_results = array();
   $company_results = array();
   $search_input = check_plain($str);
