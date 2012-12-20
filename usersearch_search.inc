@@ -58,19 +58,6 @@ function _user_search_results($str) {
 	if (empty($user_results) && empty($company_results))
 		$output .= 'No user names match your search criteria.';
 
-  $result = db_query("SELECT n.nid FROM {node} n WHERE n.type = '%s' AND LOWER(n.title) LIKE '%%%s%' AND n.status = %d", 'job_specification', strtolower($search_input), 1);
-  if (!empty($result)) {
-    $jobs = array();
-    while ($row = db_fetch_object($result)) {
-      if (!empty($row->nid)) {
-        $node = node_load($row->nid);
-        $jobs[] = node_view($node, $teaser = true);
-      }
-    }
-    if (sizeOf($jobs) > 0)
-      $output .= t('<h3>Jobs</h3>').implode($jobs, '');
-  }
-
 	$output = t('<div class="user-search">').$output.'</div>';
   return $output;
 }
