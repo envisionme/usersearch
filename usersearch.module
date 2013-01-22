@@ -74,14 +74,14 @@ function usersearch_form($form_state) {
 
   $form['search_string'] = array(
     '#type' => 'textfield',
-    '#title' => t('Profile Search'), 
-    '#size' => 30, 
-    '#maxlength' => 64, 
+    '#title' => t('Profile Search'),
+    '#size' => 30,
+    '#maxlength' => 64,
     '#description' => t('Enter a contact\'s name'),
     '#prefix' => '<div class="usersearch-field">',
     '#suffix' => '</div>',
   );
-  
+
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Search'),
@@ -98,10 +98,10 @@ function usersearch_mini_form($form_state) {
     '#type' => 'textfield',
     '#title' => '',
   );
-  
+
   $form['buttons']['submit'] = array(
-    '#type' => 'image_button',
-    '#src' => drupal_get_path('theme', 'njs_01') . '/icons/konigi/magnifying-glass-2.png',
+    '#type' => 'submit',
+    '#value' => t('Search'),
     '#submit' => array('usersearch_form_submit'),
     '#weight' => -1,
   );
