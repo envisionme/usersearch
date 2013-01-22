@@ -97,6 +97,8 @@ function usersearch_mini_form($form_state) {
   $form['search_string'] = array(
     '#type' => 'textfield',
     '#title' => '',
+    '#description' => t('Free-text search'),
+    '#attributes' => array('placeholder' => 'Search')
   );
 
   $form['buttons']['submit'] = array(
